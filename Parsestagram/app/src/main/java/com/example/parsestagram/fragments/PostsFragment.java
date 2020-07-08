@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.parsestagram.EndlessRecyclerViewScrollListener;
 import com.example.parsestagram.Post;
 import com.example.parsestagram.PostsAdapter;
 import com.example.parsestagram.R;
@@ -32,6 +33,8 @@ public class PostsFragment extends Fragment {
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
     private SwipeRefreshLayout swipeContainer;
+    private EndlessRecyclerViewScrollListener scrollListener;
+
 
     public PostsFragment() {
         // Required empty public constructor
@@ -59,7 +62,20 @@ public class PostsFragment extends Fragment {
         // 3. set the adapter on the recycler view
         rvPosts.setAdapter(adapter);
         // 4. set the layout manager on the recycler view
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        // create a linear layout manager to pass into the endless recycler view scroll listener
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        rvPosts.setLayoutManager(linearLayoutManager);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                queryPosts(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvPosts.addOnScrollListener(scrollListener);
 
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
@@ -73,15 +89,16 @@ public class PostsFragment extends Fragment {
             public void onRefresh() {
                 // Remember to CLEAR OUT old items before appending in the new ones
                 adapter.clear();
-                queryPosts();
+                queryPosts(0);
             }
         });
-        queryPosts();
+        queryPosts(0);
     }
-    protected void queryPosts() {
+    protected void queryPosts(int page) {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
-        query.setLimit(20);
+        query.setLimit(5);
+        query.setSkip(5 * page);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Post>() {
             @Override

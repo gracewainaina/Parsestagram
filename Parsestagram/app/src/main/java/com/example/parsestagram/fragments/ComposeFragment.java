@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.parsestagram.MainActivity;
@@ -53,6 +54,7 @@ public class ComposeFragment extends Fragment {
     private Button btnSubmit;
     private File photoFile;
     private String photoFileName = "photo.jpg";
+    private ProgressBar pb;
 
     // The onCreateView method is called when Fragment should create its View object hierarchy,
     // either dynamically or via XML layout inflation.
@@ -72,10 +74,13 @@ public class ComposeFragment extends Fragment {
         btnCaptureImage = view.findViewById(R.id.btnCaptureImage);
         ivPostImage = view.findViewById(R.id.ivPostImage);
         btnSubmit = view.findViewById(R.id.btnSubmit);
+        pb = view.findViewById(R.id.pbLoading);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pb.setVisibility(ProgressBar.VISIBLE);
+
                 // upon clicking we want to collect all information and create a post out of it
                 // we will need description, user and image
                 String description = etDescription.getText().toString();
@@ -194,9 +199,11 @@ public class ComposeFragment extends Fragment {
                 Toast.makeText(getContext(), "Post saved successfully!", Toast.LENGTH_SHORT).show();
                 // if we saved successfully, clear the text from the description and not save text more than once
                 etDescription.setText("");
+                pb.setVisibility(ProgressBar.INVISIBLE);
                 ivPostImage.setImageResource(0);
             }
         });
+
     }
 
     private static class BitmapScaler {
