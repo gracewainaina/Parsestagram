@@ -29,9 +29,9 @@ public class LoginActivity extends AppCompatActivity {
 
         // check if user is already logged in after opening the app again
         // if so, go to main activity
-//        if (ParseUser.getCurrentUser() != null){
-//            goMainActivity();
-//        }
+        if (ParseUser.getCurrentUser() != null){
+            goMainActivity();
+        }
 
         etPassword = findViewById(R.id.etPassword);
         etUsername = findViewById(R.id.etUsername);

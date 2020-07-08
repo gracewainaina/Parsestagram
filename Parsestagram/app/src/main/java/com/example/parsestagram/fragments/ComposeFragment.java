@@ -32,7 +32,11 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -40,6 +44,7 @@ import static android.app.Activity.RESULT_OK;
 public class ComposeFragment extends Fragment {
 
     public static final String TAG = "ComposeFragment";
+    public static final int WIDTH = 300;
 
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private EditText etDescription;
@@ -120,10 +125,36 @@ public class ComposeFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+//                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+
                 // RESIZE BITMAP, see section below
+                Uri takenPhotoUri = Uri.fromFile(getPhotoFileUri(photoFileName));
+                // by this point we have the camera photo on disk
+                Bitmap rawTakenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
+                // See BitmapScaler.java: https://gist.github.com/nesquena/3885707fd3773c09f1bb
+                Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, WIDTH);
+                // Configure byte output stream
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                // Compress the image further
+                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+                // Create a new file for the resized bitmap (`getPhotoFileUri` defined above)
+                File resizedFile = getPhotoFileUri(photoFileName + "_resized");
+                try {
+                    resizedFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(resizedFile);
+                    // Write the bytes of the bitmap to file
+                    fos.write(bytes.toByteArray());
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 // Load the taken image into a preview
-                ivPostImage.setImageBitmap(takenImage);
+                ivPostImage.setImageBitmap(rawTakenImage);
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -166,5 +197,43 @@ public class ComposeFragment extends Fragment {
                 ivPostImage.setImageResource(0);
             }
         });
+    }
+
+    private static class BitmapScaler {
+        // scale and keep aspect ratio
+        public static Bitmap scaleToFitWidth(Bitmap b, int width)
+        {
+            float factor = width / (float) b.getWidth();
+            return Bitmap.createScaledBitmap(b, width, (int) (b.getHeight() * factor), true);
+        }
+
+
+        // scale and keep aspect ratio
+        public static Bitmap scaleToFitHeight(Bitmap b, int height)
+        {
+            float factor = height / (float) b.getHeight();
+            return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factor), height, true);
+        }
+
+
+        // scale and keep aspect ratio
+        public static Bitmap scaleToFill(Bitmap b, int width, int height)
+        {
+            float factorH = height / (float) b.getWidth();
+            float factorW = width / (float) b.getWidth();
+            float factorToUse = (factorH > factorW) ? factorW : factorH;
+            return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorToUse),
+                    (int) (b.getHeight() * factorToUse), true);
+        }
+
+
+        // scale and don't keep aspect ratio
+        public static Bitmap strechToFill(Bitmap b, int width, int height)
+        {
+            float factorH = height / (float) b.getHeight();
+            float factorW = width / (float) b.getWidth();
+            return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorW),
+                    (int) (b.getHeight() * factorH), true);
+        }
     }
 }

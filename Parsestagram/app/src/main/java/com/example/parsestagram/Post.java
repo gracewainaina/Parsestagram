@@ -5,7 +5,10 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+//import org.parceler.Parcel;
+
 @ParseClassName("Post")
+//@Parcel
 public class Post extends ParseObject {
     // Getters abd setter will be based on the keys created in post- heroku
     // description, image and user
@@ -36,5 +39,9 @@ public class Post extends ParseObject {
 
     public void setUser(ParseUser parseUser){
         put(KEY_USER, parseUser);
+    }
+
+    public String getKeyCreatedAt(){
+        return getCreatedAt().toString();
     }
 }
