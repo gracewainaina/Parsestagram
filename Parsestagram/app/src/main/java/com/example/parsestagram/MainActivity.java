@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_side_navigation, menu);
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_logout) {
             ParseUser.logOut();
             // current user will now be null
-            if (ParseUser.getCurrentUser() == null){
+            if (ParseUser.getCurrentUser() == null) {
                 goLoginActivity();
             }
             return true;

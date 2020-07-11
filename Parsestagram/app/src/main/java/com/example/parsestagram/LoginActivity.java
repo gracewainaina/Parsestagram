@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
@@ -21,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etPassword;
     private Button btnLogin;
     private Button btnSU;
+    private ImageView ivLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // check if user is already logged in after opening the app again
         // if so, go to main activity
-        if (ParseUser.getCurrentUser() != null){
+        if (ParseUser.getCurrentUser() != null) {
             goMainActivity();
         }
 
@@ -37,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etUsername);
         btnLogin = findViewById(R.id.btnLogin);
         btnSU = findViewById(R.id.btnSU);
+        ivLogo = findViewById(R.id.ivLogo);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,13 +61,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void loginUser(String username, String password){
-        Log.i(TAG, "attempt to log in user"+ username);
+    private void loginUser(String username, String password) {
+        Log.i(TAG, "attempt to log in user" + username);
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
                 // Check if there is an issue with login
-                if (e != null){
+                if (e != null) {
                     Log.e(TAG, "issue with login", e);
                     Toast.makeText(LoginActivity.this, "Issue with login!", Toast.LENGTH_SHORT).show();
                     return;

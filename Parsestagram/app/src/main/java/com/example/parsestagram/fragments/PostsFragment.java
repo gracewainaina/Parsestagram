@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PostsFragment extends Fragment {
+public class PostsFragment extends Fragment implements PostsAdapter.adapterListener {
 
     public static final String TAG = "PostsFragment";
     private RecyclerView rvPosts;
@@ -58,12 +58,13 @@ public class PostsFragment extends Fragment {
         // 1. create adapter
         // 2. create data source
         allPosts = new ArrayList<>();
-        adapter = new PostsAdapter(getContext(), allPosts);
+        adapter = new PostsAdapter(getContext(), allPosts, this);
         // 3. set the adapter on the recycler view
         rvPosts.setAdapter(adapter);
         // 4. set the layout manager on the recycler view
         // create a linear layout manager to pass into the endless recycler view scroll listener
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+
         rvPosts.setLayoutManager(linearLayoutManager);
 
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
@@ -94,6 +95,7 @@ public class PostsFragment extends Fragment {
         });
         queryPosts(0);
     }
+
     protected void queryPosts(int page) {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
@@ -115,5 +117,10 @@ public class PostsFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public int getCurrentFragment() {
+        return 0;
     }
 }

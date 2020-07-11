@@ -27,10 +27,16 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     private Context context;
     private List<Post> posts;
+    private adapterListener listener;
 
-    public PostsAdapter(Context context, List<Post> posts) {
+    public PostsAdapter(Context context, List<Post> posts, adapterListener listener) {
         this.context = context;
         this.posts = posts;
+        this.listener = listener;
+    }
+
+    public interface adapterListener {
+        public int getCurrentFragment();
     }
 
     @NonNull
@@ -42,7 +48,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Post post =  posts.get(position);
+        Post post = posts.get(position);
         holder.bind(post);
 
     }
@@ -64,12 +70,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvUsername;
+        private ImageView ivProfileImage;
         private ImageView ivImage;
         private TextView tvDescription;
         private TextView tvTimestamp;
+        private ImageView ivLike;
+        private ImageView ivComment;
+        private ImageView ivDM;
+        private ImageView ivSaveactive;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,8 +89,30 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvDescription = itemView.findViewById(R.id.tvDescription);
             ivImage = itemView.findViewById(R.id.ivImage);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            ivLike = itemView.findViewById(R.id.ivLike);
+            ivComment = itemView.findViewById(R.id.ivComment);
+            ivDM = itemView.findViewById(R.id.ivDM);
+            ivSaveactive = itemView.findViewById(R.id.ivSaveactive);
 
             itemView.setOnClickListener(this);
+            // This means we are in the profile fragment
+            if (listener.getCurrentFragment() == 1) {
+                ivLike.setVisibility(View.GONE);
+                ivComment.setVisibility(View.GONE);
+                ivDM.setVisibility(View.GONE);
+                ivSaveactive.setVisibility(View.GONE);
+                tvDescription.setVisibility(View.GONE);
+                tvTimestamp.setVisibility(View.GONE);
+                ivProfileImage.setVisibility(View.GONE);
+                tvUsername.setVisibility(View.GONE);
+
+            }
+
+            if (listener.getCurrentFragment() == 0) {
+                ivProfileImage.setVisibility(View.VISIBLE);
+                tvUsername.setVisibility(View.VISIBLE);
+            }
         }
 
         public void bind(Post post) {
@@ -87,11 +121,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             tvUsername.setText(post.getUser().getUsername());
             tvTimestamp.setText(post.getKeyCreatedAt());
             ParseFile image = post.getImage();
-            if (image != null){
+            ParseFile profileimage = post.getUser().getParseFile("profilephoto");
+            if (image != null) {
                 Glide.with(context).load(image.getUrl()).into(ivImage);
             }
+            if (profileimage != null) {
+                Glide.with(context).load(profileimage.getUrl()).circleCrop().into(ivProfileImage);
+            }
+
 
         }
+
         public void onClick(View view) {
             // gets item position
             int position = getAdapterPosition();
@@ -106,6 +146,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 intent.putExtra("description", post.getDescription());
                 intent.putExtra("imageurl", post.getImage().getUrl());
                 intent.putExtra("timestamp", post.getKeyCreatedAt());
+                intent.putExtra("profileimageurl", post.getUser().getParseFile("profilephoto").getUrl());
                 // show the activity
                 context.startActivity(intent);
                 Toast.makeText(context, "Post clicked", Toast.LENGTH_SHORT).show();

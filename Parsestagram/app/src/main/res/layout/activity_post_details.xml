@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,47 +7,78 @@
     android:padding="8dp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvUsername"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        tools:text="grace" />
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivProfileImage"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="TextView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            tools:text="grace" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_below="@+id/tvUsername"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="10dp"
         android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <ImageView
+            android:id="@+id/ivLike"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="5dp"
+            app:srcCompat="@drawable/ufi_heart" />
+
+        <ImageView
+            android:id="@+id/ivComment"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            app:srcCompat="@drawable/ufi_comment" />
+
+        <ImageView
+            android:id="@+id/ivDM"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            app:srcCompat="@drawable/direct" />
+
+        <ImageView
+            android:id="@+id/ivSaveactive"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="226dp"
+            app:srcCompat="@drawable/ufi_save_active" />
+
+    </LinearLayout>
     <TextView
         android:id="@+id/tvDescription"
-        android:layout_width="283dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivImage"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="10dp"
         tools:text="You are a gem!" />
 
     <TextView
         android:id="@+id/tvTimestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvDescription"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="0dp"
         tools:text="1h" />
-</RelativeLayout>
+</LinearLayout>

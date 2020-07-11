@@ -4,16 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="2dp"
     android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/tvUsername"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        tools:text="grace" />
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivProfileImage"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="TextView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            tools:text="grace" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/ivImage"
@@ -21,6 +35,44 @@
         android:layout_height="300dp"
         android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="4dp">
+
+        <ImageView
+            android:id="@+id/ivLike"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="5dp"
+            app:srcCompat="@drawable/ufi_heart" />
+
+        <ImageView
+            android:id="@+id/ivComment"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            app:srcCompat="@drawable/ufi_comment" />
+
+        <ImageView
+            android:id="@+id/ivDM"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            app:srcCompat="@drawable/direct" />
+
+        <ImageView
+            android:id="@+id/ivSaveactive"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="193dp"
+            app:srcCompat="@drawable/ufi_save_active" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvDescription"

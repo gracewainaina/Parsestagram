@@ -84,11 +84,11 @@ public class ComposeFragment extends Fragment {
                 // upon clicking we want to collect all information and create a post out of it
                 // we will need description, user and image
                 String description = etDescription.getText().toString();
-                if (description.isEmpty()){
+                if (description.isEmpty()) {
                     Toast.makeText(getContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (photoFile == null || ivPostImage.getDrawable() == null){
+                if (photoFile == null || ivPostImage.getDrawable() == null) {
                     Toast.makeText(getContext(), "There is no image", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -104,6 +104,7 @@ public class ComposeFragment extends Fragment {
             }
         });
     }
+
     private void launchCamera() {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -174,7 +175,7 @@ public class ComposeFragment extends Fragment {
         File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(TAG, "failed to create directory");
         }
 
@@ -208,24 +209,21 @@ public class ComposeFragment extends Fragment {
 
     private static class BitmapScaler {
         // scale and keep aspect ratio
-        public static Bitmap scaleToFitWidth(Bitmap b, int width)
-        {
+        public static Bitmap scaleToFitWidth(Bitmap b, int width) {
             float factor = width / (float) b.getWidth();
             return Bitmap.createScaledBitmap(b, width, (int) (b.getHeight() * factor), true);
         }
 
 
         // scale and keep aspect ratio
-        public static Bitmap scaleToFitHeight(Bitmap b, int height)
-        {
+        public static Bitmap scaleToFitHeight(Bitmap b, int height) {
             float factor = height / (float) b.getHeight();
             return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factor), height, true);
         }
 
 
         // scale and keep aspect ratio
-        public static Bitmap scaleToFill(Bitmap b, int width, int height)
-        {
+        public static Bitmap scaleToFill(Bitmap b, int width, int height) {
             float factorH = height / (float) b.getWidth();
             float factorW = width / (float) b.getWidth();
             float factorToUse = (factorH > factorW) ? factorW : factorH;
@@ -235,8 +233,7 @@ public class ComposeFragment extends Fragment {
 
 
         // scale and don't keep aspect ratio
-        public static Bitmap strechToFill(Bitmap b, int width, int height)
-        {
+        public static Bitmap strechToFill(Bitmap b, int width, int height) {
             float factorH = height / (float) b.getHeight();
             float factorW = width / (float) b.getWidth();
             return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorW),
